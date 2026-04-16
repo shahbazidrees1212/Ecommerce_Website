@@ -1,0 +1,553 @@
+﻿@model Ecommerce_Website.ViewModels.HomeViewModel
+
+@using Microsoft.AspNetCore.Identity
+@using Ecommerce_Website.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    var user = SignInManager.IsSignedIn(User)
+        ? await UserManager.GetUserAsync(User)
+        : null;
+}
+
+<!-- ================= HERO ================= -->
+<div class="hero-section">
+    <div id="heroCarousel"
+         class="carousel slide carousel-fade hero-carousel"
+         data-bs-ride="carousel"
+         data-bs-interval="3000"
+         data-bs-wrap="true">
+        <!-- ✅ loop enabled -->
+
+        <div class="carousel-inner">
+
+            <!-- Slide 1 (VIDEO) -->
+            <div class="carousel-item active">
+                <div class="hero-slide">
+
+                    <video class="hero-video" autoplay muted loop playsinline preload="auto">
+                        <source src="/videos/ecommerce.mp4" type="video/mp4">
+                    </video>
+
+                    <div class="hero-overlay"></div>
+
+                    <div class="hero-content">
+                        <span class="hero-badge">• JUST ARRIVED</span>
+
+                        <h1>
+                            @(user != null ? $"Welcome back, {user.Name}" : "Discover Premium Products")
+                        </h1>
+
+                        <p>Curated essentials for the modern lifestyle, designed with precision.</p>
+
+                        <a asp-controller="Product" asp-action="Index" class="btn hero-btn">
+                            Start Shopping →
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="carousel-item">
+                <div class="hero-slide">
+
+                    <img src="https://media.base44.com/images/public/69cf849e207749f69514deb0/9863d63e5_generated_a28a3d7c.png"
+                         class="hero-img">
+
+                    <div class="hero-overlay"></div>
+
+                    <div class="hero-content">
+                        <span class="hero-badge">• TRENDING</span>
+                        <h1>Latest Electronics</h1>
+                        <p>Cutting-edge technology at unbeatable prices. Up to 40% off.</p>
+
+                        <a asp-controller="Product" asp-action="Index" class="btn hero-btn">
+                            Shop Now →
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="carousel-item">
+                <div class="hero-slide">
+
+                    <img src="https://media.base44.com/images/public/69cf849e207749f69514deb0/7fa59eb1c_generated_3b6c9b9a.png"
+                         class="hero-img">
+
+                    <div class="hero-overlay"></div>
+
+                    <div class="hero-content">
+                        <span class="hero-badge">• NEW COLLECTION</span>
+                        <h1>Fashion Collection</h1>
+                        <p>Trending styles crafted for those who appreciate quality.</p>
+
+                        <a asp-controller="Product" asp-action="Index" class="btn hero-btn">
+                            Explore →
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ✅ NEW SLIDE 4 -->
+            <div class="carousel-item">
+                <div class="hero-slide">
+
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+                         class="hero-img">
+
+                    <div class="hero-overlay"></div>
+
+                    <div class="hero-content">
+                        <span class="hero-badge">• HOT DEALS</span>
+                        <h1>Exclusive Offers</h1>
+                        <p>Grab limited-time discounts on your favorite products.</p>
+
+                        <a asp-controller="Product" asp-action="Index" class="btn hero-btn">
+                            View Deals →
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- INDICATORS -->
+        <div class="carousel-indicators">
+            <button data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+            <button data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+            <button data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+            <button data-bs-target="#heroCarousel" data-bs-slide-to="3"></button>
+        </div>
+
+    </div>
+</div>
+<!-- ================= CATEGORY ================= -->
+
+<section class="cat-modern py-5">
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="category-header d-flex justify-content-between align-items-end mb-4">
+            <div>
+                <p class="text-uppercase text-muted small mb-1">Explore</p>
+                <h2 class="fw-bold">Shop by Category</h2>
+            </div>
+
+            <a asp-controller="Category" asp-action="Index"
+               class="d-none d-md-flex align-items-center text-decoration-none text-muted">
+                View All →
+            </a>
+        </div>
+
+        @if (Model.Categories != null && Model.Categories.Any())
+        {
+            <div class="row g-4">
+
+                <!-- 🔥 LEFT BIG CARD -->
+                @if (Model.Categories.Count > 0)
+                {
+                    var cat = Model.Categories[0];
+
+                    <div class="col-12 col-lg-6 d-flex">
+                        <a asp-controller="Product"
+                           asp-action="Index"
+                           asp-route-categoryId="@cat.Id"
+                           class="text-decoration-none w-100">
+
+                            <div class="category-card big-card">
+
+                                <!-- ✅ USE THIS -->
+                                <img src="@cat.ImageUrl" class="category-img" />
+                                <div class="category-overlay"></div>
+
+                                <div class="category-content">
+                                    <div>
+                                        <h5>@cat.Name</h5>
+                                        <small>@(cat.Products?.Count ?? 0) products</small>
+                                    </div>
+                                    <div class="category-arrow">→</div>
+                                </div>
+
+                            </div>
+                        </a>
+                    </div>
+                }
+
+                <!-- 🔥 RIGHT SIDE -->
+                <div class="col-12 col-lg-6">
+                    <div class="row g-4">
+
+                        <!-- TOP SMALL -->
+                        @for (int i = 1; i <= 2 && i < Model.Categories.Count; i++)
+                        {
+                            var cat = Model.Categories[i];
+
+                            <div class="col-6 d-flex">
+                                <a asp-controller="Product"
+                                   asp-action="Index"
+                                   asp-route-categoryId="@cat.Id"
+                                   class="text-decoration-none w-100">
+
+                                    <div class="category-card small-card">
+
+                                        <img src="@cat.ImageUrl" class="category-img" />
+                                        <div class="category-overlay"></div>
+
+                                        <div class="category-content">
+                                            <div>
+                                                <h5>@cat.Name</h5>
+                                                <small>@(cat.Products?.Count ?? 0) products</small>
+                                            </div>
+                                            <div class="category-arrow">→</div>
+                                        </div>
+
+                                    </div>
+                                </a>
+                            </div>
+                        }
+
+                        <!-- BOTTOM MEDIUM -->
+                        @if (Model.Categories.Count > 3)
+                        {
+                            var cat = Model.Categories[3];
+
+                            <div class="col-12 d-flex">
+                                <a asp-controller="Product"
+                                   asp-action="Index"
+                                   asp-route-categoryId="@cat.Id"
+                                   class="text-decoration-none w-100">
+
+                                    <div class="category-card medium-card">
+
+                                        <img src="@cat.ImageUrl" class="category-img" />
+                                        <div class="category-overlay"></div>
+
+                                        <div class="category-content">
+                                            <div>
+                                                <h5>@cat.Name</h5>
+                                                <small>@(cat.Products?.Count ?? 0) products</small>
+                                            </div>
+                                            <div class="category-arrow">→</div>
+                                        </div>
+
+                                    </div>
+                                </a>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+</section>
+<section class="py-5" style="background:#f3f4f6;">
+    <div class="container">
+
+        <!-- HEADER -->
+        <div class="mb-4">
+            <p class="text-uppercase text-muted small mb-1">Curated for you</p>
+            <h2 class="fw-bold">Featured Products</h2>
+        </div>
+
+        <div class="row g-4">
+
+            @foreach (var product in Model.Products)
+            {
+                <div class="col-6 col-md-4 col-lg-3 d-flex">
+
+                    <div class="product-card-modern w-100">
+
+                        <!-- IMAGE -->
+                        <div class="product-img-wrapper">
+
+                            <img src="@product.ImageUrl" class="img-fluid" />
+
+                            <!-- BADGE -->
+                            <span class="product-badge">NEW</span>
+
+                            <!-- HOVER -->
+                            <div class="product-hover">
+
+                                <a asp-controller="Product"
+                                   asp-action="Details"
+                                   asp-route-id="@product.Id"
+                                   class="icon-btn">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+
+                                <a asp-controller="Cart"
+                                   asp-action="AddToCart"
+                                   asp-route-productId="@product.Id"
+                                   class="cart-btn">
+                                    <i class="fa fa-shopping-cart"></i>
+                                    Add to Cart
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                        <!-- INFO -->
+                        <div class="product-info">
+                            <p class="product-category">@product.Category?.Name</p>
+                            <h6>@product.Name</h6>
+                            <span class="price">$@product.Price</span>
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    </div>
+</section>
+            <!-- ================= DEAL ================= -->
+
+<section class="deal-section-modern">
+
+    <div class="container">
+
+        <div class="row align-items-center g-5">
+
+            <!-- VIDEO SIDE -->
+            <div class="col-lg-6">
+                <div class="deal-img-wrapper">
+
+                    <!-- VIDEO -->
+                    <video class="deal-video" autoplay muted loop playsinle>
+                        <source src="/videos/deal.mp4" type="video/mp4">
+                    </video>
+
+                    <!-- DISCOUNT BADGE -->
+                    <div class="deal-discount-badge">
+                        <span>50%</span>
+                        <small>OFF</small>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- CONTENT -->
+            <div class="col-lg-6">
+
+                <span class="deal-tag">🔥 Limited Time Deal</span>
+
+                <h2 class="deal-title">
+                    Wireless Noise Cancelling Headphones
+                </h2>
+
+                <p class="deal-desc">
+                    Experience premium sound with deep bass, ultra-long battery,
+                    and advanced active noise cancellation technology.
+                </p>
+
+                <!-- PRICE -->
+                <div class="deal-price">
+                    <span class="new-price">$99</span>
+                    <span class="old-price">$199</span>
+                </div>
+
+                <div class="deal-divider"></div>
+
+                <!-- COUNTDOWN -->
+                <div class="countdown-modern">
+                    <div>
+                        <span id="hours">12</span>
+                        <p>Hours</p>
+                    </div>
+                    <div>
+                        <span id="minutes">45</span>
+                        <p>Min</p>
+                    </div>
+                    <div>
+                        <span id="seconds">30</span>
+                        <p>Sec</p>
+                    </div>
+                </div>
+
+                <!-- BUTTON -->
+                <a asp-controller="Product"
+                   asp-action="Index"
+                   class="deal-btn">
+                    Shop Now →
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+                <!-- ================= SCRIPT ================= -->
+
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+
+        /* ================= CARD ANIMATION ================= */
+        const cards = document.querySelectorAll(".product-card, .category-card");
+
+        cards.forEach((card, index) => {
+
+            card.style.opacity = "0";
+            card.style.transform = "translateY(40px)";
+
+            setTimeout(() => {
+                card.style.transition = "all 0.5s ease";
+                card.style.opacity = "1";
+                card.style.transform = "translateY(0)";
+            }, index * 100);
+
+        });
+
+
+        /* ================= COUNTDOWN TIMER ================= */
+
+        let hours = 12;
+        let minutes = 45;
+        let seconds = 30;
+
+        function updateCountdown() {
+
+            seconds--;
+
+            if (seconds < 0) {
+                seconds = 59;
+                minutes--;
+            }
+
+            if (minutes < 0) {
+                minutes = 59;
+                hours--;
+            }
+
+            if (hours < 0) {
+                hours = 0;
+                minutes = 0;
+                seconds = 0;
+            }
+
+            // Format like 01, 02
+            document.getElementById("hours").innerText = String(hours).padStart(2, '0');
+            document.getElementById("minutes").innerText = String(minutes).padStart(2, '0');
+            document.getElementById("seconds").innerText = String(seconds).padStart(2, '0');
+        }
+
+        setInterval(updateCountdown, 1000);
+
+    });
+        // Scroll Reveal
+    window.addEventListener("scroll", () => {
+        document.querySelectorAll(".reveal").forEach(el => {
+            const top = el.getBoundingClientRect().top;
+            if (top < window.innerHeight - 100) {
+                el.classList.add("active");
+            }
+        });
+    });
+
+    // Mouse Light Effect
+    document.querySelectorAll(".product-card-modern").forEach(card => {
+        card.addEventListener("mousemove", e => {
+            const rect = card.getBoundingClientRect();
+            card.style.setProperty('--x', e.clientX - rect.left + 'px');
+            card.style.setProperty('--y', e.clientY - rect.top + 'px');
+        });
+    });
+        window.addEventListener("scroll", function () {
+      const navbar = document.querySelector(".navbar");
+      navbar.classList.toggle("scrolled", window.scrollY > 50);
+    });
+
+ 
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        /* ===== SECTION ANIMATION ===== */
+        const section = document.querySelector(".cat-modern");
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    section.classList.add("show-section");
+                }
+            });
+        }, { threshold: 0.2 });
+
+        if (section) sectionObserver.observe(section);
+
+
+        /* ===== CARD ANIMATION ===== */
+        const items = document.querySelectorAll(".cat-modern .row.g-4 > div");
+
+        const cardObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("show");
+                    observer.unobserve(entry.target); // run once
+                }
+            });
+        }, { threshold: 0.2 });
+
+        items.forEach((item) => cardObserver.observe(item));
+
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const cards = document.querySelectorAll(".product-card-modern");
+        const dealSection = document.querySelector(".deal-section-modern");
+
+        const observer = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(function(entry) {
+
+                if (entry.isIntersecting) {
+
+                    // PRODUCT CARD
+                    if (entry.target.classList.contains("product-card-modern")) {
+                        entry.target.classList.add("show");
+                    }
+
+                    // DEAL SECTION
+                    if (entry.target.classList.contains("deal-section-modern")) {
+                        entry.target.classList.add("show");
+                    }
+
+                    // RUN ONLY ONCE (better performance)
+                    observer.unobserve(entry.target);
+                }
+
+            });
+        }, {
+            threshold: 0.15, // 👈 smoother + earlier animation
+            rootMargin: "0px 0px -50px 0px" // 👈 trigger slightly before fully visible
+        });
+
+        // 👉 ADD DYNAMIC STAGGER (VERY IMPORTANT 🔥)
+        cards.forEach(function(card, index) {
+            card.style.transitionDelay = `${index * 0.1}s`;
+            observer.observe(card);
+        });
+
+        // observe deal section
+        if (dealSection) {
+            observer.observe(dealSection);
+        }
+
+    });
+</script>

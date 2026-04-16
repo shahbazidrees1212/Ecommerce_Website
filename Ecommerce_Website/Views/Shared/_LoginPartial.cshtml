@@ -1,0 +1,151 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Ecommerce_Website.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ApplicationUser? user = null;
+    string profilePic = "/images/default-user.png";
+
+    if (SignInManager.IsSignedIn(User))
+    {
+        user = await UserManager.GetUserAsync(User);
+
+        if (user != null && !string.IsNullOrEmpty(user.ProfilePicture))
+        {
+            profilePic = user.ProfilePicture;
+        }
+    }
+}
+
+<ul class="navbar-nav ms-auto">
+
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item dropdown">
+
+            <a class="nav-link dropdown-toggle text-white fw-semibold d-flex align-items-center"
+                   href="#"
+                   role="button"
+                   data-bs-toggle="dropdown">
+
+                <img src="@profilePic"
+                     class="rounded-circle me-2"
+                     width="34"
+                     height="34"
+                     style="object-fit:cover" />
+
+                @user?.Name
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <span class="badge bg-warning text-dark ms-2">Admin</span>
+                }
+
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <!-- ADMIN MENU -->
+
+                    <li>
+                        <a class="dropdown-item"
+                               asp-controller="Account"
+                               asp-action="Profile">
+                            <i class="fa fa-user me-2"></i>
+                            Admin Profile
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item fw-semibold text-dark"
+                               asp-controller="Admin"
+                               asp-action="Index">
+
+                            <i class="fa fa-gauge me-2"></i>
+                            Admin Panel
+
+                        </a>
+                    </li>
+                }
+                else
+                {
+                    <!-- USER MENU -->
+
+                    <li>
+                        <a class="dropdown-item"
+                               asp-controller="Account"
+                               asp-action="Profile">
+                            <i class="fa fa-user me-2"></i>
+                            My Profile
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item"
+                               asp-controller="Order"
+                               asp-action="MyOrders">
+                            <i class="fa fa-box me-2"></i>
+                            My Orders
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item"
+                               asp-controller="Cart"
+                               asp-action="Index">
+                            <i class="fa fa-shopping-cart me-2"></i>
+                            My Cart
+                        </a>
+                    </li>
+                }
+
+                <li><hr class="dropdown-divider"></li>
+
+                <!-- LOGOUT -->
+
+                <li>
+                    <form asp-controller="Home"
+                          asp-action="Logout"
+                          method="post">
+
+                        <button type="submit"
+                                class="dropdown-item text-danger">
+
+                            <i class="fa fa-sign-out-alt me-2"></i>
+                            Logout
+
+                        </button>
+
+                    </form>
+                </li>
+
+            </ul>
+
+        </li>
+    }
+    else
+    {
+        <!-- LOGIN / REGISTER -->
+
+        <li class="nav-item">
+            <a class="nav-link text-white"
+                   asp-controller="Home"
+                   asp-action="Login">
+                Login
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link text-white"
+                   asp-controller="Home"
+                   asp-action="Register">
+                Register
+            </a>
+        </li>
+    }
+
+</ul>

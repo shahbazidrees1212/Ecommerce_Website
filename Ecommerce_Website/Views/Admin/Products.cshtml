@@ -1,0 +1,104 @@
+﻿@model IEnumerable<Ecommerce_Website.Models.Product>
+
+<div class="container-fluid admin-products-page">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <h2 class="fw-bold">Products</h2>
+
+        <a asp-action="CreateProduct" class="btn btn-primary">
+            <i class="fa fa-plus me-1"></i> Add Product
+        </a>
+
+    </div>
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Category</th>
+                        <th>Image</th>
+                        <th width="160">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td class="fw-semibold">@item.Name</td>
+
+                            <td>$@item.Price</td>
+
+                            <td>@item.Category?.Name</td>
+
+                            <td>
+                                <img src="@item.ImageUrl"
+                                     width="60"
+                                     height="60"
+                                     style="object-fit:cover"
+                                     class="rounded shadow-sm" />
+                            </td>
+
+                            <td>
+
+                                <a asp-action="EditProduct"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-warning">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+
+                                <a asp-action="DeleteProduct"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-sm btn-danger">
+                                    <i class="fa fa-trash"></i>
+                                </a>
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- PAGINATION -->
+
+    <nav class="mt-4">
+
+        <ul class="pagination justify-content-center">
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+
+                    <a class="page-link"
+                           asp-action="Products"
+                           asp-route-page="@i">
+
+                        @i
+
+                    </a>
+
+                </li>
+            }
+
+        </ul>
+
+    </nav>
+
+</div>

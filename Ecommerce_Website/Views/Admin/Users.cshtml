@@ -1,0 +1,141 @@
+﻿@model IEnumerable<ApplicationUser>
+
+<div class="container mt-4">
+
+    <!-- HEADER -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-2 mb-md-0">👥 User Management</h4>
+    </div>
+
+    <!-- SEARCH -->
+    <form method="get" asp-action="Users" class="mb-3">
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4">
+
+                <div class="input-group search-box">
+
+                    <span class="input-group-text bg-white">
+                        <i class="fa fa-search text-muted"></i>
+                    </span>
+
+                    <input type="text"
+                           name="search"
+                           value="@ViewBag.Search"
+                           class="form-control"
+                           placeholder="Search users..." />
+
+                    <button class="btn btn-dark">Search</button>
+
+                </div>
+
+            </div>
+        </div>
+    </form>
+
+    <!-- TABLE CARD -->
+    <div class="card shadow-sm border-0 user-card">
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Status</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var user in Model)
+                        {
+                            <tr>
+
+                                <td class="fw-semibold">@user.Email</td>
+
+                                <td>@(user.PhoneNumber ?? "N/A")</td>
+
+                                <td>
+                                    <span class="badge status-badge
+                                        @(user.IsBlocked ? "blocked" : "active")">
+                                        @(user.IsBlocked ? "Blocked" : "Active")
+                                    </span>
+                                </td>
+
+                                <td class="text-center">
+
+                                    <form asp-action="ToggleBlockUser" method="post" style="display:inline;">
+                                        <input type="hidden" name="id" value="@user.Id" />
+
+                                        @if (user.IsBlocked)
+                                        {
+                                            <button type="submit" class="btn btn-success btn-sm action-btn">
+                                                <i class="fa fa-unlock me-1"></i> Unblock
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button type="submit" class="btn btn-danger btn-sm action-btn">
+                                                <i class="fa fa-ban me-1"></i> Block
+                                            </button>
+                                        }
+
+                                    </form>
+
+                                </td>
+
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center py-3 text-muted">
+                                No users found
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+        </div>
+
+    </div>
+
+    <!-- PAGINATION -->
+    <div class="d-flex justify-content-center mt-3">
+        <ul class="pagination">
+
+            <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link"
+                   asp-action="Users"
+                   asp-route-page="@(ViewBag.CurrentPage - 1)"
+                   asp-route-search="@ViewBag.Search">Prev</a>
+            </li>
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link"
+                       asp-action="Users"
+                       asp-route-page="@i"
+                       asp-route-search="@ViewBag.Search">@i</a>
+                </li>
+            }
+
+            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                <a class="page-link"
+                   asp-action="Users"
+                   asp-route-page="@(ViewBag.CurrentPage + 1)"
+                   asp-route-search="@ViewBag.Search">Next</a>
+            </li>
+
+        </ul>
+    </div>
+
+</div>

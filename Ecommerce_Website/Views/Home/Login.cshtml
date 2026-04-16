@@ -1,0 +1,133 @@
+﻿@model Ecommerce_Website.ViewModels.LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="login-wrapper">
+    <div class="login-card">
+
+        <!-- RIGHT: LOGIN FORM -->
+        <div class="login-right">
+
+            <h3 class="text-center mb-4 signin-title">
+                Sign In
+            </h3>
+
+            <form asp-action="Login" method="post">
+
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Email -->
+                <div class="form-floating mb-3">
+                    <input asp-for="Email" class="form-control rounded-3" placeholder="name@example.com" />
+                    <label asp-for="Email"></label>
+                    <span asp-validation-for="Email" class="text-danger small"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="form-floating mb-3 position-relative">
+                    <input asp-for="Password" type="password" id="loginPasswordField" class="form-control rounded-3" placeholder="Password" />
+
+                    <label asp-for="Password"></label>
+
+                    <button type="button"
+                            class="btn btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2 p-2"
+                            id="toggleLoginPassword">
+
+                        👁
+
+                    </button>
+
+                    <span asp-validation-for="Password" class="text-danger small"></span>
+                </div>
+
+                <!-- Remember -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                    <div class="form-check">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label small"></label>
+                    </div>
+
+                    <a asp-controller="Home" asp-action="ForgotPassword" class="auth-highlight">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+                <!-- Login Button -->
+                <div class="d-grid">
+
+                    <button type="submit"
+                            class="btn btn-primary btn-lg fw-semibold rounded-pill">
+
+                        Log In
+
+                    </button>
+
+                </div>
+
+                <!-- Register -->
+                <div class="text-center mt-3">
+
+                    <p class="mb-1">
+
+                        New here?
+
+                        <a asp-controller="Home" asp-action="Register" class="auth-highlight">
+                            Create an account
+                        </a>
+
+                    </p>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+        <!-- LEFT PANEL -->
+        <div class="login-left">
+
+            <h2 class="fw-bold mb-3">
+                Welcome Back!
+            </h2>
+
+            <p class="px-3 mb-4 text-light">
+
+                Log in to continue shopping and explore amazing products.
+
+            </p>
+
+            <img src="~/images/login-side.svg"
+                 alt="Login Illustration"
+                 class="img-fluid" />
+
+        </div>
+
+    </div>
+</div>
+
+
+@section Scripts {
+
+    <script>
+
+        const togglePassword = document.getElementById("toggleLoginPassword");
+        const passwordField = document.getElementById("loginPasswordField");
+
+        togglePassword.addEventListener("click", function () {
+
+        const type = passwordField.getAttribute("type") === "password" ? "text" : "password";
+
+        passwordField.setAttribute("type", type);
+
+        });
+
+    </script>
+
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+
+}
