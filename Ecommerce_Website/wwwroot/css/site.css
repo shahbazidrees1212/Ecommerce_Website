@@ -2376,7 +2376,7 @@ body {
     font-size: 38px;
     font-weight: 800;
     color: #111827; /* clean professional black */
-   
+    margin-top: 20px;
     letter-spacing: 0.5px;
 }
 
@@ -3250,7 +3250,7 @@ body {
 
 /* TOP SPACE */
 .cart-page {
-    margin-top: 110px;
+    margin-top: 150px;
 }
 
 /* CARD */
@@ -3385,6 +3385,131 @@ body {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+/* ================= MOBILE RESPONSIVE ================= */
+
+/* Tablet */
+@media (max-width: 992px) {
+    .cart-page {
+        margin-top: 90px;
+    }
+
+    .summary-card {
+        max-width: 100%;
+        position: static;
+        top: auto;
+        margin-top: 20px;
+    }
+
+    .cart-card,
+    .summary-card {
+        border-radius: 16px;
+    }
+
+        .cart-card .card-header,
+        .summary-card .card-header {
+            border-radius: 16px 16px 0 0;
+            padding: 14px 18px;
+        }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .cart-page {
+        margin-top: 80px;
+        padding: 0 10px;
+    }
+
+    .cart-table {
+        border-spacing: 0 8px;
+    }
+
+        .cart-table th,
+        .cart-table td {
+            padding: 10px 8px;
+            font-size: 14px;
+            vertical-align: middle;
+        }
+
+    .cart-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+    }
+
+    .remove-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .summary-card {
+        max-width: 100%;
+        width: 100%;
+        margin-top: 20px;
+        position: static;
+    }
+
+    .summary-item {
+        font-size: 14px;
+    }
+
+    .btn-checkout {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .badge {
+        font-size: 12px;
+        padding: 6px 8px;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 576px) {
+    .cart-page {
+        margin-top: 70px;
+        padding: 0 8px;
+    }
+
+    .cart-card,
+    .summary-card {
+        border-radius: 14px;
+    }
+
+        .cart-card .card-header,
+        .summary-card .card-header {
+            padding: 12px 14px;
+            font-size: 15px;
+            border-radius: 14px 14px 0 0;
+        }
+
+    .cart-table th,
+    .cart-table td {
+        font-size: 12px;
+        padding: 8px 6px;
+    }
+
+    .cart-img {
+        width: 42px;
+        height: 42px;
+    }
+
+    .summary-item {
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+
+    .btn-checkout {
+        font-size: 13px;
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .alert {
+        font-size: 13px;
+        padding: 10px;
     }
 }
 /*-------------------------------*/
@@ -3637,10 +3762,7 @@ body {
     }
 
     /* BUTTONS */
-    .admin-category-page .btn-warning {
-        border-radius: 8px;
-    }
-
+    .admin-category-page .btn-warning,
     .admin-category-page .btn-danger {
         border-radius: 8px;
     }
@@ -3660,23 +3782,134 @@ body {
         font-size: 15px;
     }
 
-/* MOBILE RESPONSIVE */
+/* ================= RESPONSIVE ================= */
+
+/* Tablet */
+@media (max-width: 992px) {
+    .admin-category-page {
+        padding: 20px 15px;
+    }
+
+        .admin-category-page h2 {
+            font-size: 24px;
+        }
+
+        .admin-category-page .category-card {
+            padding: 16px;
+        }
+
+        .admin-category-page .category-img {
+            width: 60px;
+            height: 60px;
+        }
+
+        .admin-category-page .table th,
+        .admin-category-page .table td {
+            padding: 10px 8px;
+            vertical-align: middle;
+        }
+}
+
+/* Mobile */
 @media (max-width: 768px) {
     .admin-category-page {
-        padding: 20px 10px;
+        margin-top: 70px;
+        padding: 15px 10px;
     }
+
+        .admin-category-page .category-header {
+            margin-bottom: 20px;
+        }
 
         .admin-category-page h2 {
             font-size: 20px;
         }
 
-        .admin-category-page .category-img {
-            width: 50px;
-            height: 50px;
+        .admin-category-page .category-card {
+            padding: 14px;
+            border-radius: 12px;
+            overflow-x: auto;
         }
+
+        .admin-category-page .table {
+            min-width: 650px;
+        }
+
+            .admin-category-page .table th,
+            .admin-category-page .table td {
+                padding: 10px 8px;
+                font-size: 14px;
+                white-space: nowrap;
+                vertical-align: middle;
+            }
 
         .admin-category-page tbody tr {
             height: auto;
+        }
+
+        .admin-category-page .category-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+        }
+
+        .admin-category-page .btn-warning,
+        .admin-category-page .btn-danger {
+            font-size: 12px;
+            padding: 5px 10px;
+        }
+
+        .admin-category-page .pagination {
+            margin-top: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .admin-category-page .page-link {
+            padding: 6px 10px;
+            font-size: 13px;
+            margin: 3px;
+        }
+}
+
+/* Small Mobile */
+@media (max-width: 576px) {
+    .admin-category-page {
+        margin-top: 65px;
+        padding: 12px 8px;
+    }
+
+        .admin-category-page h2 {
+            font-size: 18px;
+        }
+
+        .admin-category-page .category-card {
+            padding: 12px;
+        }
+
+        .admin-category-page .table {
+            min-width: 600px;
+        }
+
+            .admin-category-page .table th,
+            .admin-category-page .table td {
+                font-size: 12px;
+                padding: 8px 6px;
+            }
+
+        .admin-category-page .category-img {
+            width: 42px;
+            height: 42px;
+        }
+
+        .admin-category-page .btn-warning,
+        .admin-category-page .btn-danger {
+            font-size: 11px;
+            padding: 4px 8px;
+        }
+
+        .admin-category-page .text-muted {
+            font-size: 13px;
         }
 }
 /*----------------------------------------*/
