@@ -1,0 +1,118 @@
+﻿@model Ecommerce_Website.ViewModels.ProfileViewModel
+
+<div class="container profile-page">
+
+    <div class="row justify-content-center">
+
+        <div class="col-lg-7 col-md-10">
+
+            <div class="card profile-card border-0">
+
+                <!-- HEADER -->
+                <div class="card-header d-flex justify-content-between align-items-center">
+
+                    <h5 class="mb-0 text-white">My Profile</h5>
+
+                    <a asp-controller="Home"
+                       asp-action="ChangePassword"
+                       class="btn btn-light btn-sm fw-semibold shadow-sm">
+
+                        <i class="fa fa-key me-1"></i> Change Password
+                    </a>
+
+                </div>
+
+                <div class="card-body p-4">
+
+                    @if (ViewBag.Message != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show">
+                            @ViewBag.Message
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <form method="post" enctype="multipart/form-data">
+
+                        <!-- PROFILE HEADER -->
+                        <div class="profile-header d-flex align-items-center gap-3 mb-4">
+
+                            <div class="position-relative">
+                                <img id="profilePreview"
+                                     src="@(string.IsNullOrEmpty(Model.ProfilePicture) ? "/images/default-user.png" : Model.ProfilePicture)"
+                                     class="rounded-circle profile-img" />
+
+                                <label class="upload-icon">
+                                    <i class="fa fa-camera"></i>
+                                    <input type="file"
+                                           asp-for="ProfileImage"
+                                           hidden
+                                           onchange="previewImage(event)" />
+                                </label>
+                            </div>
+
+                            <div>
+                                <h5 class="mb-1">@Model.Name</h5>
+                                <small>@Model.Email</small>
+                            </div>
+
+                        </div>
+
+                        <hr />
+
+                        <h6 class="mb-3">Personal Information</h6>
+
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+                                <label>Full Name</label>
+                                <input asp-for="Name" class="form-control" />
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label>Email</label>
+                                <input asp-for="Email" class="form-control" readonly />
+                            </div>
+
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Phone Number</label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Address</label>
+                            <textarea asp-for="Address" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <div class="text-end mt-4">
+
+                            <button class="btn btn-primary rounded-pill px-4 shadow-sm">
+                                <i class="fa fa-save me-2"></i> Save Changes
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+    function previewImage(event) {
+        const reader = new FileReader();
+
+        reader.onload = function () {
+            document.getElementById('profilePreview').src = reader.result;
+        }
+
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>

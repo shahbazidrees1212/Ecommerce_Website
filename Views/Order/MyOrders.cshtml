@@ -1,0 +1,217 @@
+﻿@model IEnumerable<Ecommerce_Website.Models.Order>
+
+<style>
+    .order-card {
+        border-radius: 12px;
+        transition: 0.2s;
+        border: 1px solid #e5e7eb;
+    }
+
+        .order-card:hover {
+            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+
+    .order-header {
+        background: #f9fafb;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .order-total {
+        font-size: 18px;
+        font-weight: 600;
+        color: #16a34a;
+    }
+
+    .status-badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-paid {
+        background: #e0f2fe;
+        color: #0284c7;
+    }
+
+    .status-pending {
+        background: #fef9c3;
+        color: #ca8a04;
+    }
+
+    .status-cancelled {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
+    .status-delivered {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .status-shipped {
+        background: #e0e7ff;
+        color: #4338ca;
+    }
+
+    .btn-custom {
+        border-radius: 8px;
+        font-size: 13px;
+        padding: 6px 14px;
+    }
+</style>
+
+<div class="container mt-5">
+
+    <h2 class="fw-bold mb-4">📦 My Orders</h2>
+
+    <!-- Alerts -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success text-center">
+            @TempData["Success"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger text-center">
+            @TempData["Error"]
+        </div>
+    }
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info text-center p-4">
+            No orders yet.
+        </div>
+    }
+    else
+    {
+        @foreach (var order in Model)
+        {
+            <div class="card order-card mb-4 shadow-sm">
+
+                <!-- HEADER -->
+                <div class="card-header order-header d-flex justify-content-between align-items-center">
+
+                    <div>
+                        <strong>Order #@order.Id</strong>
+                        <div class="text-muted small">
+                            Placed on @order.OrderDate.ToString("dd MMM yyyy")
+                        </div>
+                    </div>
+
+                    <!-- STATUS -->
+                    <div>
+                        @if (order.Status == "Pending")
+                        {
+                            <span class="status-badge status-pending">⏳ Pending</span>
+                        }
+                        else if (order.Status == "Paid")
+                        {
+                            <span class="status-badge status-paid">💳 Paid</span>
+                        }
+                        else if (order.Status == "Shipped")
+                        {
+                            <span class="status-badge status-shipped">🚚 Shipped</span>
+                        }
+                        else if (order.Status == "Cancelled")
+                        {
+                            <span class="status-badge status-cancelled">❌ Cancelled</span>
+                        }
+                        else
+                        {
+                            <span class="status-badge status-delivered">✅ Delivered</span>
+                        }
+                    </div>
+
+                </div>
+
+                <!-- BODY -->
+                <div class="card-body">
+
+                    <div class="row align-items-center">
+
+                        <!-- TOTAL -->
+                        <div class="col-md-4">
+                            <div class="text-muted small">Total Amount</div>
+                            <div class="order-total">$@order.TotalAmount</div>
+                        </div>
+
+                        <!-- ITEMS -->
+                        <div class="col-md-4">
+                            <div class="text-muted small">Items</div>
+                            <strong>@order.OrderItems.Count item(s)</strong>
+                        </div>
+
+                        <!-- ACTIONS -->
+                        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+
+                            <a asp-controller="Order"
+                               asp-action="OrderDetails"
+                               asp-route-id="@order.Id"
+                               class="btn btn-outline-dark btn-custom me-2">
+                                View Details
+                            </a>
+
+                            @if (order.Status == "Pending" || order.Status == "Paid")
+                            {
+                                <a asp-controller="Order"
+                                   asp-action="CancelOrder"
+                                   asp-route-id="@order.Id"
+                                   class="btn btn-danger btn-custom"
+                                   onclick="return confirm('Are you sure you want to cancel this order?');">
+                                    Cancel
+                                </a>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+    }
+    @if (ViewBag.TotalPages > 1)
+    {
+        <nav class="mt-4">
+            <ul class="pagination justify-content-center">
+
+                <!-- Previous -->
+                <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-action="MyOrders"
+                       asp-route-page="@(ViewBag.CurrentPage - 1)">
+                        Previous
+                    </a>
+                </li>
+
+                <!-- Page Numbers -->
+                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                {
+                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                        <a class="page-link"
+                           asp-action="MyOrders"
+                           asp-route-page="@i">
+                            @i
+                        </a>
+                    </li>
+                }
+
+                <!-- Next -->
+                <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-action="MyOrders"
+                       asp-route-page="@(ViewBag.CurrentPage + 1)">
+                        Next
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+    }
+</div>

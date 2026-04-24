@@ -1,0 +1,158 @@
+﻿@model IEnumerable<Ecommerce_Website.Models.Cart>
+
+<div class="container cart-page">
+
+    <h3 class="mb-4 fw-bold">🛒 Shopping Cart</h3>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center shadow-sm">
+            Your cart is empty.
+        </div>
+    }
+    else
+    {
+
+        <div class="row g-4">
+
+            <!-- CART ITEMS -->
+            <div class="col-lg-7 col-xl-8">
+
+                <div class="card cart-card border-0">
+
+                    <div class="card-header">
+                        Cart Items
+                    </div>
+
+                    <div class="card-body p-0">
+
+                        <table class="table align-middle mb-0 cart-table">
+
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Qty</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+
+                                        <td class="d-flex align-items-center">
+
+                                            <img src="@item.Product.ImageUrl"
+                                                 class="cart-img me-3" />
+
+                                            <div>
+                                                <strong>@item.Product.Name</strong>
+                                            </div>
+
+                                        </td>
+
+                                        <td>$@item.Product.Price</td>
+
+                                        <td>
+                                            <span class="badge bg-primary px-3 py-2">
+                                                @item.Quantity
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <strong>
+                                                $@(item.Product.Price* item.Quantity)
+                                            </strong>
+                                        </td>
+
+                                        <td>
+                                            <a asp-controller="Cart"
+                                               asp-action="Remove"
+                                               asp-route-id="@item.Id"
+                                               class="btn btn-sm btn-danger remove-btn">
+                                                ✕
+                                            </a>
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUMMARY -->
+            <div class="col-lg-5 col-xl-4 d-flex justify-content-end align-items-start">
+
+                <div class="card summary-card border-0 w-100">
+
+                    <div class="card-header">
+                        Cart Summary
+                    </div>
+
+                    <div class="card-body">
+
+                        <div class="summary-item">
+                            <span>Total Items</span>
+                            <span>@Model.Sum(x => x.Quantity)</span>
+                        </div>
+
+                        <div class="summary-item">
+                            <span>Total Price</span>
+                            <strong>
+                                $@Model.Sum(x => x.Product.Price * x.Quantity)
+                            </strong>
+                        </div>
+
+                        <hr />
+
+                        <div class="d-grid">
+
+                            <a asp-controller="Order"
+                               asp-action="Checkout"
+                               class="btn btn-checkout btn-lg">
+                                Proceed to Checkout
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    }
+
+</div>
+<script>
+    document.querySelectorAll(".remove-btn").forEach(btn => {
+        btn.addEventListener("click", function (e) {
+
+            const row = this.closest("tr");
+
+            row.style.transition = "0.3s";
+            row.style.opacity = "0";
+            row.style.transform = "translateX(80px)";
+
+            setTimeout(() => {
+                window.location = this.href;
+            }, 300);
+
+            e.preventDefault();
+        });
+    });
+</script>

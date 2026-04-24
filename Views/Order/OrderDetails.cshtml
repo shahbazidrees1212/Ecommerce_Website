@@ -1,0 +1,115 @@
+﻿@model Ecommerce_Website.Models.Order
+
+<div class="container mt-5">
+
+    <h2 class="fw-bold mb-4">
+        📦 Order Details #@Model.Id
+    </h2>
+
+    <!-- ORDER SUMMARY CARD -->
+    <div class="card shadow-sm mb-4 border-0">
+
+        <div class="card-body">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+
+                <div>
+                    <h5 class="mb-1">Order #@Model.Id</h5>
+                    <small class="text-muted">
+                        Placed on @Model.OrderDate.ToString("dd MMM yyyy")
+                    </small>
+                </div>
+
+                <!-- STATUS BADGE -->
+                <span class="badge px-3 py-2
+                    @(Model.Status == "Pending" ? "bg-warning text-dark" :
+                                            Model.Status == "Processing" ? "bg-info" :
+                                            Model.Status == "Shipped" ? "bg-primary" :
+                                            Model.Status == "Delivered" ? "bg-success" :
+                                            "bg-secondary")">
+                    @Model.Status
+                </span>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-6">
+                    <p class="mb-1 text-muted">Total</p>
+                    <h5 class="text-success fw-bold">
+                        $@Model.TotalAmount
+                    </h5>
+                </div>
+
+                <div class="col-md-6">
+                    <p class="mb-1 text-muted">Items</p>
+                    <h6>@Model.OrderItems.Count() item(s)</h6>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- PRODUCTS LIST -->
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-light fw-semibold">
+            🛒 Ordered Products
+        </div>
+
+        <div class="card-body p-0">
+
+            <table class="table mb-0 align-middle">
+
+                <thead class="table-light">
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Qty</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    @if (Model.OrderItems != null)
+                    {
+                        foreach (var item in Model.OrderItems)
+                        {
+                            <tr>
+                                <td class="fw-semibold">@item.Product?.Name</td>
+                                <td>$@item.Price</td>
+                                <td>@item.Quantity</td>
+                                <td class="fw-semibold text-success">
+                                    $@(item.Price* item.Quantity)
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-3">
+                                No products found
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- BACK BUTTON -->
+    <div class="mt-4">
+        <a asp-action="MyOrders" class="btn btn-outline-dark">
+            ← Back to My Orders
+        </a>
+    </div>
+
+</div>

@@ -1,0 +1,161 @@
+﻿@model IEnumerable<Ecommerce_Website.Models.Cart>
+
+<div class="container checkout-page mt-5">
+
+    <!-- HEADER -->
+    <h3>Checkout</h3>
+    <p class="text-muted mb-4">Complete your purchase securely</p>
+
+    @{
+        decimal total = Model.Sum(x => x.Product.Price * x.Quantity);
+    }
+
+    <form asp-controller="Order" asp-action="ProcessPayment" method="post">
+
+        <div class="row g-4">
+
+            <!-- LEFT: CART -->
+            <div class="col-lg-8">
+
+                <div class="card checkout-card shadow-sm border-0">
+
+                    <div class="card-header">
+                        Order Items
+                    </div>
+
+                    <div class="card-body p-0">
+
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0">
+
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex align-items-center gap-3">
+
+                                                    <img src="@item.Product.ImageUrl" class="product-img" />
+
+                                                    <div>
+                                                        <div class="fw-semibold">
+                                                            @item.Product.Name
+                                                        </div>
+                                                        <small class="text-success">✔ In Stock</small>
+                                                    </div>
+
+                                                </div>
+                                            </td>
+
+                                            <td class="text-nowrap">$@item.Product.Price</td>
+
+                                            <td>
+                                                <span class="badge bg-primary">
+                                                    @item.Quantity
+                                                </span>
+                                            </td>
+
+                                            <td class="fw-semibold text-nowrap">
+                                                $@(item.Product.Price* item.Quantity)
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+
+                            </table>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- RIGHT: SUMMARY -->
+            <div class="col-lg-4">
+
+                <div class="card checkout-card shadow-sm border-0">
+
+                    <div class="card-header">
+                        Order Summary
+                    </div>
+
+                    <div class="card-body">
+
+                        <!-- SUMMARY BOX -->
+                        <div class="summary-box mb-3">
+
+                            <p class="d-flex justify-content-between mb-1">
+                                <span>Items</span>
+                                <strong>@Model.Sum(x => x.Quantity)</strong>
+                            </p>
+
+                            <p class="d-flex justify-content-between mb-1">
+                                <span>Subtotal</span>
+                                <span>$@total</span>
+                            </p>
+
+                            <p class="d-flex justify-content-between text-success mb-1">
+                                <span>Shipping</span>
+                                <span>Free</span>
+                            </p>
+
+                        </div>
+
+                        <!-- TOTAL -->
+                        <h5 class="d-flex justify-content-between mb-3">
+                            <span>Total</span>
+                            <span class="total">$@total</span>
+                        </h5>
+
+                        @Html.AntiForgeryToken()
+
+                        <!-- PAYMENT FORM -->
+                        <input type="text" name="cardNumber" class="form-control mb-2" placeholder="Card Number" />
+
+                        <div class="row g-2 mb-2">
+                            <div class="col-6">
+                                <input type="text" name="expiry" class="form-control" placeholder="MM/YY" />
+                            </div>
+                            <div class="col-6">
+                                <input type="text" name="cvv" class="form-control" placeholder="CVV" />
+                            </div>
+                        </div>
+
+                        <input type="text" name="cardName" class="form-control mb-3" placeholder="Card Holder Name" />
+
+                        <!-- PAY BUTTON -->
+                        <button type="submit" class="btn btn-pay w-100">
+                            Pay Securely
+                        </button>
+
+                        <!-- ALT PAYMENTS -->
+                        <div class="d-grid gap-2 mt-3">
+
+                            <a asp-controller="Cart" asp-action="StripeCheckout"
+                               class="btn btn-dark btn-alt">
+                                Stripe
+                            </a>
+
+                            <a asp-controller="Cart" asp-action="PayPalCheckout"
+                               class="btn btn-primary btn-alt">
+                                PayPal
+                            </a>
+
+                        </div>
+
+                        <p class="text-muted small text-center mt-3">
+                            🔒 Secure Checkout
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>

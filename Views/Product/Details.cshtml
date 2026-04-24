@@ -1,0 +1,134 @@
+﻿@model Ecommerce_Website.Models.Product
+
+<div class="product-page d-flex justify-content-center">
+
+    <div class="product-container">
+
+        <div class="product-card">
+
+            <div class="row align-items-center g-5">
+
+                <!-- IMAGE -->
+                <div class="col-lg-6">
+
+                    <div class="image-box text-center" id="imageBox">
+
+                        <!-- MAIN IMAGE -->
+                        <img id="mainImage"
+                             src="@Model.ImageUrl"
+                             class="img-fluid main-img" />
+
+                        <!-- ZOOM LENS -->
+                        <div id="zoomLens"></div>
+
+                    </div>
+
+                    <!-- THUMBNAILS -->
+                    <div class="thumb-wrapper mt-3">
+                        <img src="@Model.ImageUrl" class="thumb active" onclick="changeImage(this)" />
+                        <img src="@Model.ImageUrl" class="thumb" onclick="changeImage(this)" />
+                        <img src="@Model.ImageUrl" class="thumb" onclick="changeImage(this)" />
+                    </div>
+
+                </div>
+
+                <!-- DETAILS -->
+                <div class="col-lg-6">
+
+                    <h2 class="product-title">@Model.Name</h2>
+                    <div class="product-price">$@Model.Price</div>
+
+                    <p class="product-desc">@Model.Description</p>
+
+                    <hr />
+
+                    <div class="mb-4">
+                        <label class="fw-semibold mb-2">Quantity</label>
+                        <input type="number" class="form-control qty-input" value="1" min="1" />
+                    </div>
+
+                    <div class="d-flex gap-3 flex-wrap">
+
+                        <a id="cartBtn"
+                           asp-controller="Cart"
+                           asp-action="AddToCart"
+                           asp-route-productId="@Model.Id"
+                           class="btn add-cart-btn">
+
+                            <span id="btnText">
+                                <i class="fa fa-shopping-cart me-2"></i>
+                                Add to Cart
+                            </span>
+                        </a>
+
+                        <a asp-controller="Product"
+                           asp-action="Index"
+                           class="btn continue-btn">
+
+                            Continue Shopping
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+    const mainImage = document.getElementById("mainImage");
+    const lens = document.getElementById("zoomLens");
+    const imageBox = document.getElementById("imageBox");
+
+    /* ================= IMAGE CHANGE (SMOOTH FADE) ================= */
+    function changeImage(element) {
+        mainImage.style.opacity = 0;
+
+        setTimeout(() => {
+            mainImage.src = element.src;
+            mainImage.style.opacity = 1;
+        }, 200);
+
+        document.querySelectorAll(".thumb").forEach(img => {
+            img.classList.remove("active");
+        });
+
+        element.classList.add("active");
+    }
+
+    /* ================= AMAZON STYLE ZOOM ================= */
+    imageBox.addEventListener("mousemove", function (e) {
+
+        const rect = imageBox.getBoundingClientRect();
+
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const percentX = (x / rect.width) * 100;
+        const percentY = (y / rect.height) * 100;
+
+        mainImage.style.transformOrigin = percentX + "% " + percentY + "%";
+        mainImage.style.transform = "scale(1.8)";
+
+        /* SHOW LENS */
+        lens.style.display = "block";
+        lens.style.left = (x - 60) + "px";
+        lens.style.top = (y - 60) + "px";
+    });
+
+    imageBox.addEventListener("mouseleave", function () {
+        mainImage.style.transform = "scale(1)";
+        mainImage.style.transformOrigin = "center";
+
+        lens.style.display = "none";
+    });
+
+    /* ================= BUTTON LOADING ================= */
+    document.getElementById("cartBtn").addEventListener("click", function () {
+        document.getElementById("btnText").innerHTML = "Adding... ⏳";
+    });
+</script>
