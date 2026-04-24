@@ -3,9 +3,8 @@ WORKDIR /src
 
 COPY . .
 
-WORKDIR /src/Ecommerce_Website
-RUN dotnet restore
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet restore "Ecommerce_Website.csproj"
+RUN dotnet publish "Ecommerce_Website.csproj" -c Release -o /app/publish
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
